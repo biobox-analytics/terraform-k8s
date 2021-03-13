@@ -1,0 +1,32 @@
+FROM vm/ubuntu:18.04
+
+RUN apt update && apt install -y --no-install-recommends \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    moreutils \
+    software-properties-common
+
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" && \
+    apt update
+
+RUN apt install -y --no-install-recommends \
+    docker-ce=5:18.09.* \
+    docker-ce-cli=5:18.09.* \
+    containerd.io=1.2.* && \
+    curl -fsSL "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-Linux-x86_64" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+
+WORKDIR /root
+
+COPY / .
+
+SECRET ENV docker_config
+RUN mkdir ~/.docker/ && echo ${docker_config} | base64 -d > ~/.docker/config.json
+
+RUN SERVICE=terraform-k8s && \
+    export IMAGE="gcr.io/biobox-dev/${LAYERCI_REPO_OWNER}/${SERVICE}" && \
+    export TAG="${GIT_COMMIT}" && \
+    docker build -t $IMAGE:$TAG . && \
+    docker push $IMAGE:$TAG

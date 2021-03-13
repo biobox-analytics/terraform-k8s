@@ -100,6 +100,7 @@ type WorkspaceSpec struct {
 	// Specifies the agent pool ID we wish to use.
 	// +optional
 	AgentPoolID string `json:"agentPoolID,omitempty"`
+	AutoApply bool `json:"autoApply"`
 }
 
 // WorkspaceStatus defines the observed state of Workspace

@@ -178,7 +178,7 @@ func (t *TerraformCloudClient) CreateWorkspace(workspace string, instance *appv1
 	}
 
 	options := tfc.WorkspaceCreateOptions{
-		AutoApply:        &AutoApply,
+		AutoApply:        &instance.Spec.AutoApply,
 		Name:             &workspace,
 		TerraformVersion: &tfVersion,
 	}

@@ -39,6 +39,8 @@ spec:
             agentPoolID:
               description: Specifies the agent pool ID we wish to use.
               type: string
+            autoApply:
+              type: boolean
             module:
               description: Module source and version to use
               nullable: true
@@ -213,6 +215,7 @@ spec:
               - token_id
               type: object
           required:
+          - autoApply
           - organization
           - secretsMountPath
           type: object
